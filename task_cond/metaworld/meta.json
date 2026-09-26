@@ -1,0 +1,263 @@
+{
+  "dino_checkpoint": "./dinov3_pretrain/dinov3-vitl16-pretrain-lvd1689m",
+  "hidden_size": 1024,
+  "image_size": [
+    256,
+    256
+  ],
+  "data_mode": "clean",
+  "camera_name": "corner",
+  "feature": "last_layer_cls_diff (last_frame - first_frame), averaged per task",
+  "tasks": {
+    "assembly-v3": {
+      "num_episodes": 50,
+      "dim": 1024,
+      "norm": 6.204653739929199
+    },
+    "basketball-v3": {
+      "num_episodes": 50,
+      "dim": 1024,
+      "norm": 5.195949554443359
+    },
+    "bin-picking-v3": {
+      "num_episodes": 50,
+      "dim": 1024,
+      "norm": 5.338427543640137
+    },
+    "box-close-v3": {
+      "num_episodes": 50,
+      "dim": 1024,
+      "norm": 4.99444055557251
+    },
+    "button-press-topdown-v3": {
+      "num_episodes": 50,
+      "dim": 1024,
+      "norm": 4.960309028625488
+    },
+    "button-press-topdown-wall-v3": {
+      "num_episodes": 50,
+      "dim": 1024,
+      "norm": 4.279766082763672
+    },
+    "button-press-v3": {
+      "num_episodes": 50,
+      "dim": 1024,
+      "norm": 5.425587177276611
+    },
+    "button-press-wall-v3": {
+      "num_episodes": 50,
+      "dim": 1024,
+      "norm": 4.909750938415527
+    },
+    "coffee-button-v3": {
+      "num_episodes": 50,
+      "dim": 1024,
+      "norm": 4.400609493255615
+    },
+    "coffee-pull-v3": {
+      "num_episodes": 50,
+      "dim": 1024,
+      "norm": 5.321916580200195
+    },
+    "coffee-push-v3": {
+      "num_episodes": 50,
+      "dim": 1024,
+      "norm": 6.126737594604492
+    },
+    "dial-turn-v3": {
+      "num_episodes": 50,
+      "dim": 1024,
+      "norm": 4.142280101776123
+    },
+    "disassemble-v3": {
+      "num_episodes": 50,
+      "dim": 1024,
+      "norm": 4.569700241088867
+    },
+    "door-close-v3": {
+      "num_episodes": 50,
+      "dim": 1024,
+      "norm": 7.298065185546875
+    },
+    "door-lock-v3": {
+      "num_episodes": 50,
+      "dim": 1024,
+      "norm": 3.2596819400787354
+    },
+    "door-open-v3": {
+      "num_episodes": 50,
+      "dim": 1024,
+      "norm": 5.965123176574707
+    },
+    "door-unlock-v3": {
+      "num_episodes": 50,
+      "dim": 1024,
+      "norm": 3.3980367183685303
+    },
+    "drawer-close-v3": {
+      "num_episodes": 50,
+      "dim": 1024,
+      "norm": 4.239950656890869
+    },
+    "drawer-open-v3": {
+      "num_episodes": 50,
+      "dim": 1024,
+      "norm": 6.473138332366943
+    },
+    "faucet-close-v3": {
+      "num_episodes": 50,
+      "dim": 1024,
+      "norm": 4.763177871704102
+    },
+    "faucet-open-v3": {
+      "num_episodes": 50,
+      "dim": 1024,
+      "norm": 5.135168075561523
+    },
+    "hammer-v3": {
+      "num_episodes": 50,
+      "dim": 1024,
+      "norm": 4.518681526184082
+    },
+    "hand-insert-v3": {
+      "num_episodes": 50,
+      "dim": 1024,
+      "norm": 5.828469753265381
+    },
+    "handle-press-side-v3": {
+      "num_episodes": 50,
+      "dim": 1024,
+      "norm": 3.7488605976104736
+    },
+    "handle-press-v3": {
+      "num_episodes": 50,
+      "dim": 1024,
+      "norm": 4.695296764373779
+    },
+    "handle-pull-side-v3": {
+      "num_episodes": 50,
+      "dim": 1024,
+      "norm": 4.21750020980835
+    },
+    "handle-pull-v3": {
+      "num_episodes": 50,
+      "dim": 1024,
+      "norm": 3.591325044631958
+    },
+    "lever-pull-v3": {
+      "num_episodes": 50,
+      "dim": 1024,
+      "norm": 5.39216947555542
+    },
+    "peg-insert-side-v3": {
+      "num_episodes": 50,
+      "dim": 1024,
+      "norm": 4.461671352386475
+    },
+    "peg-unplug-side-v3": {
+      "num_episodes": 50,
+      "dim": 1024,
+      "norm": 3.735417604446411
+    },
+    "pick-out-of-hole-v3": {
+      "num_episodes": 50,
+      "dim": 1024,
+      "norm": 5.171546936035156
+    },
+    "pick-place-v3": {
+      "num_episodes": 50,
+      "dim": 1024,
+      "norm": 6.563816070556641
+    },
+    "pick-place-wall-v3": {
+      "num_episodes": 50,
+      "dim": 1024,
+      "norm": 5.731835842132568
+    },
+    "plate-slide-back-side-v3": {
+      "num_episodes": 50,
+      "dim": 1024,
+      "norm": 5.065668106079102
+    },
+    "plate-slide-back-v3": {
+      "num_episodes": 50,
+      "dim": 1024,
+      "norm": 5.0864458084106445
+    },
+    "plate-slide-side-v3": {
+      "num_episodes": 50,
+      "dim": 1024,
+      "norm": 6.900625705718994
+    },
+    "plate-slide-v3": {
+      "num_episodes": 50,
+      "dim": 1024,
+      "norm": 6.9636454582214355
+    },
+    "push-back-v3": {
+      "num_episodes": 50,
+      "dim": 1024,
+      "norm": 6.167060375213623
+    },
+    "push-v3": {
+      "num_episodes": 50,
+      "dim": 1024,
+      "norm": 6.633273124694824
+    },
+    "push-wall-v3": {
+      "num_episodes": 50,
+      "dim": 1024,
+      "norm": 6.087756156921387
+    },
+    "reach-v3": {
+      "num_episodes": 50,
+      "dim": 1024,
+      "norm": 4.725966453552246
+    },
+    "reach-wall-v3": {
+      "num_episodes": 50,
+      "dim": 1024,
+      "norm": 4.682105541229248
+    },
+    "shelf-place-v3": {
+      "num_episodes": 50,
+      "dim": 1024,
+      "norm": 5.388116359710693
+    },
+    "soccer-v3": {
+      "num_episodes": 50,
+      "dim": 1024,
+      "norm": 5.70975399017334
+    },
+    "stick-pull-v3": {
+      "num_episodes": 50,
+      "dim": 1024,
+      "norm": 7.150008678436279
+    },
+    "stick-push-v3": {
+      "num_episodes": 50,
+      "dim": 1024,
+      "norm": 7.376630783081055
+    },
+    "sweep-into-v3": {
+      "num_episodes": 50,
+      "dim": 1024,
+      "norm": 5.617773056030273
+    },
+    "sweep-v3": {
+      "num_episodes": 50,
+      "dim": 1024,
+      "norm": 6.421994686126709
+    },
+    "window-close-v3": {
+      "num_episodes": 50,
+      "dim": 1024,
+      "norm": 4.29583215713501
+    },
+    "window-open-v3": {
+      "num_episodes": 50,
+      "dim": 1024,
+      "norm": 4.566590309143066
+    }
+  }
+}

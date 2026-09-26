@@ -1,0 +1,153 @@
+common:
+  # --- MetaWorld single Sawyer arm ---
+  action_dim: 4          # [dx, dy, dz, gripper]  (Box(-1,1,(4,)))
+  state_dim: 4           # proprioception ONLY: [eef_xyz(3), gripper(1)]
+
+  # ASYMMETRIC chunk lengths:
+  #   action_chunk_size = current chunk (the only one used at inference)
+  #   next_chunk_size   = next chunk (training-only auxiliary prediction)
+  action_chunk_size: 4
+  next_chunk_size: 12
+  proprio_len: 1
+
+  num_inference_steps: 10
+  action_execution_horizon: 4    # must be <= action_chunk_size
+
+
+dataset:
+  type: "metaworld"      # (informational; create_dataset builds the same dataset class)
+
+  # Root that contains one folder per task:
+  #   <dataset_dir>/<task>/demo_<data_mode>/data/*.hdf5
+  dataset_dir: "/path/to/metaworld/data"  # TODO: set to your local MetaWorld HDF5 root
+
+  data_mode: "clean"     # matches gen_data_hdf5.py --split clean  -> demo_clean
+
+  # MetaWorld render cameras are 'corner' and 'behind'; the first is the model input.
+  camera_names: ["corner", "behind"]
+
+  # (W, H). DINOv3 patch_size=16 -> both must be multiples of 16. Render res is 256x256.
+  image_size: [256, 256]
+
+  # Task-condition vectors for the 50 MT50 tasks (shipped in this repo).
+  # Only loaded when model.use_task_cond=true.
+  task_cond_dir: "./task_cond/metaworld"
+
+  image_aug: false
+
+  # MetaWorld envs clip actions to [-1, 1] internally; the hdf5 files store the
+  # raw (unclipped) expert outputs. Clipping at load time keeps train targets
+  # aligned with what eval can actually execute. Must match the --clip used
+  # for utils/stat-metaworld.json.
+  action_clip: 1.0
+
+  indices_config:
+    state_indices: [0]
+    camera_indices: [0]
+    # Current action chunk 0..23 (length must equal common.action_chunk_size)
+    action_indices: [0, 1, 2, 3]
+    # Next action chunk — OPTIONAL:
+    #   if present, it is used as-is (must have length == common.next_chunk_size);
+    #   if absent, the dataloader derives chunk_size + arange(next_chunk_size),
+    #   which for the config above is exactly [12..23].
+    next_action_indices: [4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
+
+
+# Model configuration
+model:
+  num_registers: 2       # action-expert internal registers (unrelated to DINO cls/register)
+
+  use_task_cond: true
+
+  # ---- next-chunk design switches ----
+  # whether next-chunk tokens may attend to the CURRENT action tokens
+  # (default false: blocks the current-chunk -> next-chunk shortcut;
+  #  base tokens never attend to next tokens regardless of this switch)
+  next_attend_current: false
+
+  # whether the next chunk uses a dedicated output projection
+  # (true: separate output_proj_next; false: share output_proj)
+  separate_next_output_proj: false
+
+  # next-chunk positional encoding:
+  #   "continuous" (default) → positions action_chunk_size .. +next_chunk_size-1,
+  #     all distinct from the current chunk's 0..action_chunk_size-1
+  #     (honest absolute temporal position, no position-wise correspondence)
+  #   "restart" → positions 0..next_chunk_size-1; sincos values depend only on
+  #     the absolute index, so the prefix coincides with the current chunk's
+  next_pos_mode: "continuous"
+
+  # DINOv3 vision encoder
+  vision_encoder:
+    checkpoint_path: "./dinov3_pretrain/dinov3-vitl16-pretrain-lvd1689m"
+
+    #   [-1]      → only last layer
+    #   [-4, -1]  → -4 + -1
+    feat_layers: [-8, -4]
+
+    # before adapter, use CLS / register tokens or not
+    include_cls_register: false
+
+    # multi layer features fusion mode:
+    #   "per_layer" → one layer one adapter
+    #   "concat"    →  LayerNorm first → concat in channel dim → proj → adapter
+    fusion_mode: "concat"
+    concat:
+      proj_type: "linear"   # "linear" | "mlp" (Linear-GELU-Linear)
+      pre_norm: true        # LayerNorm first
+      out_dim: null         # target dim, null → = DINO hidden_size (1024)
+
+  # Action Expert configuration
+  action_expert:
+    depth: 8
+    hidden_size: 512
+    num_heads: 4
+    vlm_adapter_num_queries: 48   # adapter query num
+    adapter_depth: 4
+
+
+# Training configuration
+training:
+  batch_size: 128
+
+  # Time sampler
+  time_sampler: "logit_normal"   # logit_normal / uniform
+  time_mu: 0.0
+  time_sigma: 1.0
+
+  # Optimizer / Scheduler
+  learning_rate: 2e-4
+  lr_min: 4.0e-5
+  weight_decay: 1e-2
+  betas: [0.9, 0.99]
+  grad_clip_norm: 1.0
+
+  # Training schedule
+  epochs: 30
+  grad_accum_steps: 1
+  save_interval_epoch: 5
+
+  # Next-Chunk Prediction (unified single forward, asymmetric lengths):
+  #   next-chunk tokens use their own positional & type embeddings; appended
+  #   after the base sequence under a block-causal mask and dropped at inference.
+  use_next_chunk_pred: true
+  lambda_next_chunk: 0.9
+
+  #   true  → t_next sampled independently of t (same as the cascaded version)
+  #   false → t_next = t (both chunks share one denoising time)
+  independent_next_time: false
+
+
+# Inference configuration
+inference:
+  # Action smoothing (B-Spline)
+  smooth_actions: false
+  smooth_sigma: 1.0
+
+
+# System settings
+system:
+  num_workers: 16
+  pin_memory: true
+  
+  

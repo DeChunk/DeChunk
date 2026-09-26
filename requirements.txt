@@ -1,0 +1,19 @@
+# Core
+torch>=2.1
+torchvision>=0.16
+transformers>=4.56      # DINOv3 support
+omegaconf>=2.3
+
+# Data / utils
+numpy>=1.24
+h5py>=3.8
+opencv-python>=4.8
+pillow>=10.0
+scipy>=1.10
+matplotlib>=3.7
+tqdm>=4.65
+
+# MetaWorld simulation
+gymnasium>=1.0
+mujoco>=3.1
+metaworld>=3.0          # Farama-Foundation/Metaworld
